@@ -6,7 +6,7 @@ erroQuadratico = 999; % vai conter o erro quadratico de cada iteracao
 
 erro = []; % vetor que vai conter os erros para cada entrada
 
-n = 0.01; % passo escolhido
+n = 0.1; % passo escolhido
 
 totalDeIteracoes = 0; % calcular quantas iteracoes foram necessarias
 limiteIteracoes = 10; % limitar a um numero maximo de iteracoes
@@ -40,3 +40,13 @@ end
 pesos
 totalDeIteracoes
 
+entrada = [];
+entrada(1,1) = -1;
+entrada(2,1) = input('x1:');
+entrada(3,1) = input('x2:');
+
+if(ativacao(pesos * entrada) == 1)
+  saida = 'true'
+else
+  saida = 'false'
+end
