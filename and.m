@@ -34,11 +34,11 @@ while(erroQuadratico > 0.5 && limiteIteracoes > 0)
 	end
 	erroQuadratico = sum(power(erro, 2)) / (indexEntrada - 1); % calcula o erro quadratico
   erro = [];
-  erroQuadratico
 end
 
 pesos
 totalDeIteracoes
+erroQuadratico
 
 entrada = [];
 entrada(1,1) = -1;
