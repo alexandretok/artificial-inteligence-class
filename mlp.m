@@ -1,5 +1,5 @@
-entradas = [-1 0 0; -1 1 0; -1 0 1; -1 1 1];
-desejado = [-1; 1; 1; -1];
+entradas = [-1 1 1; -1 0 0; -1 1 0; -1 0 1];
+desejado = [-1 0; -1 0; 1 0; 1 0];
 
 erroQuadratico = 999; % vai conter o erro quadratico de cada iteracao
 
@@ -9,43 +9,73 @@ passo = 0.1; % passo escolhido
 
 alfa = 2;
 
+quantidadeAmostrasTreinamento = 1;
+
 numeroEntradas = 2;
 
 if(size(entradas)(2) != numeroEntradas + 1)
   disp(['O numero de entradas esta errado!']);
+  return;
 end
 
-qtdNeuroniosEntrada = 4;
+qtdNeuroniosEntrada = 2;
 qtdNeuroniosSaida = 2;
 
-wEscondida = rand(qtdNeuroniosEntrada, numeroEntradas + 1);
-wSaida = rand(qtdNeuroniosSaida, qtdNeuroniosEntrada + 1);
+pesosEscondida = [0.1 0.1 0.1; 0.1 0.1 0.1]; % rand(qtdNeuroniosEntrada, numeroEntradas + 1);
+pesosSaida = [0.1 0.1 0.1; 0.1 0.1 0.1]; % rand(qtdNeuroniosSaida, qtdNeuroniosEntrada + 1);
 
 totalIteracoes = 0; % calcular quantas iteracoes foram necessarias
-limiteIteracoes = 10; % limitar a um numero maximo de iteracoes
+limiteIteracoes = 1; % limitar a um numero maximo de iteracoes
 
-% funcao degrau (funcao de ativacao)
+
+
+clc % limpa a tela
+
+while(erroQuadratico > 0.5 && limiteIteracoes > totalIteracoes)
+  totalIteracoes++;
+  
+  for iteracao = 1:quantidadeAmostrasTreinamento
+    entradaCamadaEscondida = entradas(iteracao,:); % Pega a entrada atual
+    
+    % Calcula o x e y da camada escondida (camada 1)
+    xCamadaEscondida = calculaSaida(entradaCamadaEscondida, pesosEscondida);
+    yCamadaEscondida = ativacao(xCamadaEscondida, alfa)
+    
+    entradaCamadaSaida = [-1 yCamadaEscondida]; % Adiciona o bias
+    
+    y = ativacao(calculaSaida(entradaCamadaSaida, pesosSaida), alfa);
+    errosLocais(iteracao, :) = (realpow((desejado(iteracao, 1)-y(1,1)),2) + realpow((desejado(iteracao, 2)-y(1,2)),2))/2;
+    pesosEscondida = pesosEscondida + passo * derivadaAtivacao(y, alfa) * transpose(y) * errosLocais(iteracao, :)
+  end
+  
+  errosLocais
+  
+  % erroQuadratico = 0;
+  
+  % disp(['teste: ' num2str(totalIteracoes) ';']);
+end
+
+% funcao sigmoide (funcao de ativacao)
 function resultado = ativacao(x, alfa)
-  for i = 1:size(x)(2)
-    resultado(i) = 1 / (1 + exp(-alfa * x(1,i)));
+  if size(x) == [1 1]
+    resultado = 1 / (1 + exp(-alfa * x));
+  else
+    for i = 1:size(x)(2)
+      resultado(i) = 1 / (1 + exp(-alfa * x(1,i)));
+    end
   end
 end
 
-function resultado = derivadaAtivacao(x)
-  resultado = alfa * ativacao(x) * (1 - ativacao(x));
+function resultado = derivadaAtivacao(x, alfa)
+  if size(x) == [1 1]
+    resultado = alfa * ativacao(x, alfa) * (1 - ativacao(x, alfa));
+  else
+    for i = 1:size(x)(2)
+      resultado = alfa * ativacao(x(1,i), alfa) * (1 - ativacao(x(1,i), alfa));
+    end
+  end
 end
 
-function resultado = calculaX(entrada, pesos)
+function resultado = calculaSaida(entrada, pesos)
   resultado = entrada * transpose(pesos);
-end
-
-tmp = ativacao(calculaX(entradas(2,:), wEscondida), alfa);
-tmp = [-1 tmp];
-ativacao(calculaX(tmp, wSaida), alfa)
-
-
-while(erroQuadratico > 0.5 && limiteIteracoes > totalIteracoes)
-  totalIteracoes += 1;
-  
-  % disp(['teste: ' num2str(totalIteracoes) ';']);
 end
