@@ -5,8 +5,8 @@
  % -1 |  1 | -1 |  1 |  0
  % -1 | -1 | -1 | -1 |  0
 
-entradas = [-1 -1 -1 -1; 1 0 1 0; 1 1 0 0];
-desejado = [0 1 1 0; 1 0 0 0];
+entradas = [-1 -1 -1; 1 0 1; 1 1 0];
+desejado = [0 1 1; 1 0 0];
 
 erroQuadratico = 999; % vai conter o erro quadratico de cada iteracao
 
@@ -20,14 +20,9 @@ erroAceitavel = 0.00001;
 
 alfa = 0.001;
 
-quantidadeAmostrasTreinamento = 4;
+quantidadeAmostrasTreinamento = size(entradas)(2);
 
-numeroEntradas = 2;
-
-if(size(entradas)(1) != numeroEntradas + 1)
-  disp(['O numero de entradas esta errado!']);
-  return;
-end
+numeroEntradas = size(entradas)(1) - 1;
 
 qtdNeuroniosEntrada = 4;
 qtdNeuroniosSaida = 2;
@@ -94,7 +89,7 @@ while(limiteIteracoes > totalIteracoes)
   pesosEscondidaAnterior = tmp;
 end
 
-  yCamadaSaida
+  saida = round(yCamadaSaida)
   desejado
 
   disp(['Iteracoes: ' num2str(totalIteracoes)])
