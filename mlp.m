@@ -16,7 +16,7 @@ passo = 0.75; % passo escolhido
 
 alfaFuncaoAtivacao = 1;
 
-erroAceitavel = 0.001;
+erroAceitavel = 0.00001;
 
 alfa = 0.001;
 
@@ -38,7 +38,7 @@ pesosSaida = [0.1 0.2 0.3 0.4 0.5; 0.1 0.2 0.3 0.4 0.5]; % rand(qtdNeuroniosSaid
 pesosSaidaAnterior = zeros(qtdNeuroniosSaida, qtdNeuroniosEntrada + 1);
 
 totalIteracoes = 0; % calcular quantas iteracoes foram necessarias
-limiteIteracoes = 2000; % limitar a um numero maximo de iteracoes
+limiteIteracoes = 5000; % limitar a um numero maximo de iteracoes
 
 % funcao sigmoide (funcao de ativacao)
 function resultado = ativacao(x, alfaFuncaoAtivacao)
@@ -75,7 +75,7 @@ while(limiteIteracoes > totalIteracoes)
   
   erroQuadratico;
   if(erroQuadratico < erroAceitavel)
-    return;
+    break;
   end
   
   % Atualizando pesos da camada de saida
