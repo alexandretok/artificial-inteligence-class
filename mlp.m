@@ -1,39 +1,25 @@
- % Tabela verdade
- % bi | e1 | e2 | d1 | d2
- % -1 |  1 |  1 | -1 |  0
- % -1 | -1 |  1 |  1 |  0
- % -1 |  1 | -1 |  1 |  0
- % -1 | -1 | -1 | -1 |  0
-
+% % % % % CONFIGURAÇÕES % % % % %
 entradas = [-1 -1 -1; 1 0 1; 1 1 0];
 desejado = [0 1 1; 1 0 0];
-
-erroQuadratico = 999; % vai conter o erro quadratico de cada iteracao
-
-errosLocais = []; % vetor que vai conter os erros para cada entrada
-
-passo = 0.75; % passo escolhido
-
 alfaFuncaoAtivacao = 1;
-
-erroAceitavel = 0.00001;
-
+passo = 0.75; % passo escolhido
+erroAceitavel = 1e-2;
+limiteIteracoes = 5000; % limitar a um numero maximo de iteracoes
 alfa = 0.001;
-
-quantidadeAmostrasTreinamento = size(entradas)(2);
-
-numeroEntradas = size(entradas)(1) - 1;
-
 qtdNeuroniosEntrada = 4;
 qtdNeuroniosSaida = 2;
+% % % % % FIM CONFIGURAÇÕES % % % % %
 
-pesosEscondida = [0.1 0.2 0.3; 0.1 0.2 0.3; 0.1 0.2 0.3; 0.1 0.2 0.3]; % rand(qtdNeuroniosEntrada, numeroEntradas + 1);
+
+erroQuadratico = 999; % vai conter o erro quadratico de cada iteracao
+errosLocais = []; % vetor que vai conter os erros para cada entrada
+quantidadeAmostrasTreinamento = size(entradas)(2);
+numeroEntradas = size(entradas)(1) - 1;
+pesosEscondida = rand(qtdNeuroniosEntrada, numeroEntradas + 1);
 pesosEscondidaAnterior = zeros(qtdNeuroniosEntrada, numeroEntradas + 1);
-pesosSaida = [0.1 0.2 0.3 0.4 0.5; 0.1 0.2 0.3 0.4 0.5]; % rand(qtdNeuroniosSaida, qtdNeuroniosEntrada + 1);
+pesosSaida = rand(qtdNeuroniosSaida, qtdNeuroniosEntrada + 1);
 pesosSaidaAnterior = zeros(qtdNeuroniosSaida, qtdNeuroniosEntrada + 1);
-
 totalIteracoes = 0; % calcular quantas iteracoes foram necessarias
-limiteIteracoes = 5000; % limitar a um numero maximo de iteracoes
 
 % funcao sigmoide (funcao de ativacao)
 function resultado = ativacao(x, alfaFuncaoAtivacao)
@@ -47,7 +33,6 @@ end
 function resultado = calculaSaida(entrada, pesos)
   resultado = pesos * entrada;
 end
-
 
 clc % limpa a tela
 
@@ -74,17 +59,16 @@ while(limiteIteracoes > totalIteracoes)
   end
   
   % Atualizando pesos da camada de saida
-  % Guarda valor para usar na proxima iteracao
-  tmp = pesosSaida;
+  tmp = pesosSaida; % Guarda valor para usar na proxima iteracao (n-1)
   deltaSaida = passo / quantidadeAmostrasTreinamento * (derivadaAtivacao(yCamadaSaida, alfaFuncaoAtivacao) .* errosLocais) * entradaCamadaSaida';
-  
   pesosSaida = pesosSaida + deltaSaida + alfa * pesosSaidaAnterior;
   pesosSaidaAnterior = tmp;
   
+  % Atualizando pesos da camada escondida
   tmp = derivadaAtivacao(entradaCamadaSaida, alfaFuncaoAtivacao) .* (pesosSaida' * (derivadaAtivacao(yCamadaSaida, alfaFuncaoAtivacao) .* errosLocais));
   tmp = tmp(2:end,:);
   deltaEntrada = passo / quantidadeAmostrasTreinamento * tmp * entradas';
-  tmp = pesosEscondidaAnterior;
+  tmp = pesosEscondidaAnterior; % Guarda valor para usar na proxima iteracao (n-1)
   pesosEscondida = pesosEscondida + deltaEntrada + alfa * pesosEscondidaAnterior;
   pesosEscondidaAnterior = tmp;
 end
