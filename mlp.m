@@ -1,13 +1,13 @@
 % % % % % CONFIGURAÇÕES % % % % %
-entradas = [-1 -1 -1 -1 -1 -1;
-	         3  1  3  3 0.5 3;
-	         3  3  3  1  1  1;
-	         3  3  1  3  3 0.5];
+entradas = [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1;
+	           3 3  3  3  3   3  2  2  2  2   2  1  1  1  1   1;
+	           3 2 1.5 1 0.5 0.1 2 1.5 1 0.5 0.1 2 1.5 1 0.5 0.1;
+	           3 3  3  3  3   3  2  2  2  2   2  1  1  1  1   1];
 
-desejado = [1 0.8 1 1 0 1;
-			1 1 0.8 0 1 0];
+desejado = [1 0.7 0.8 0.9 1 1 0.7 0.8 0.9 1 1 0.7 0.8 0.9 1 1;
+			      1 0.3 0.2 0.1 0 0 0.3 0.2 0.1 0 0 0.3 0.2 0.1 0 0];
 alfaFuncaoAtivacao = 1;
-passo = 0.75; % passo escolhido
+passo = 1.5; % passo escolhido
 erroAceitavel = 1e-10;
 limiteIteracoes = 12000; % limitar a um numero maximo de iteracoes
 alfa = 0.0001;

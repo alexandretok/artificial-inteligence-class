@@ -1,17 +1,29 @@
 function finalRad = controle(serPort)
-    while (true)
-        x1 = ReadSonarMultiple(serPort, 1); % Direita
-        x2 = ReadSonarMultiple(serPort, 2); % Frente
-        x3 = ReadSonarMultiple(serPort, 3); % Esquerda
-        x4 = ReadSonarMultiple(serPort, 4); % Trás
 
-        if(x2 < 1)
-            x = 'vira porra'
-            SetFwdVelAngVelCreate(serPort,0,2.5);
-        else
-            SetFwdVelAngVelCreate(serPort,0.5,0);
+    while (true)
+        sDireita = ReadSonarMultiple(serPort, 1);  % Direita
+        sFrente = ReadSonarMultiple(serPort, 2);   % Frente
+        sEsquerda = ReadSonarMultiple(serPort, 3); % Esquerda
+
+        if(isempty(sDireita))
+            sDireita = 0.1;
+        end
+        if(isempty(sFrente))
+            sFrente = 0.1;
+        end
+        if(isempty(sEsquerda))
+            sEsquerda = 0.1;
         end
         
-        pause(1)
+        
+
+        entrada = [sDireita; sFrente; sEsquerda];
+
+        saida = usarMLP(entrada);
+
+        SetDriveWheelsCreate(serPort,saida(1,1),saida(2,1));
+        
+        pause(abs(rand(1) - 0.5));
     end
+
 end
