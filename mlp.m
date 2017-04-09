@@ -1,11 +1,16 @@
 % % % % % CONFIGURAÇÕES % % % % %
-entradas = [-1 -1 -1; 1 0 1; 1 1 0];
-desejado = [0 1 1; 1 0 0];
+entradas = [-1 -1 -1 -1 -1 -1;
+	         3  1  3  3 0.5 3;
+	         3  3  3  1  1  1;
+	         3  3  1  3  3 0.5];
+
+desejado = [1 0.8 1 1 0 1;
+			1 1 0.8 0 1 0];
 alfaFuncaoAtivacao = 1;
 passo = 0.75; % passo escolhido
-erroAceitavel = 1e-2;
-limiteIteracoes = 5000; % limitar a um numero maximo de iteracoes
-alfa = 0.001;
+erroAceitavel = 1e-10;
+limiteIteracoes = 12000; % limitar a um numero maximo de iteracoes
+alfa = 0.0001;
 qtdNeuroniosEntrada = 4;
 qtdNeuroniosSaida = 2;
 % % % % % FIM CONFIGURAÇÕES % % % % %
@@ -13,31 +18,20 @@ qtdNeuroniosSaida = 2;
 
 erroQuadratico = 999; % vai conter o erro quadratico de cada iteracao
 errosLocais = []; % vetor que vai conter os erros para cada entrada
-quantidadeAmostrasTreinamento = size(entradas)(2);
-numeroEntradas = size(entradas)(1) - 1;
+quantidadeAmostrasTreinamento = size(entradas);
+quantidadeAmostrasTreinamento = quantidadeAmostrasTreinamento(2);
+numeroEntradas = size(entradas);
+numeroEntradas = numeroEntradas(1) - 1;
 pesosEscondida = rand(qtdNeuroniosEntrada, numeroEntradas + 1);
 pesosEscondidaAnterior = zeros(qtdNeuroniosEntrada, numeroEntradas + 1);
 pesosSaida = rand(qtdNeuroniosSaida, qtdNeuroniosEntrada + 1);
 pesosSaidaAnterior = zeros(qtdNeuroniosSaida, qtdNeuroniosEntrada + 1);
 totalIteracoes = 0; % calcular quantas iteracoes foram necessarias
 
-% funcao sigmoide (funcao de ativacao)
-function resultado = ativacao(x, alfaFuncaoAtivacao)
-  resultado = 1 ./ (1 + exp(-alfaFuncaoAtivacao * x));
-end
-
-function resultado = derivadaAtivacao(x, alfaFuncaoAtivacao)
-  resultado = alfaFuncaoAtivacao * x .* (1 - x);
-end
-
-function resultado = calculaSaida(entrada, pesos)
-  resultado = pesos * entrada;
-end
-
 clc % limpa a tela
 
 while(limiteIteracoes > totalIteracoes)
-  totalIteracoes++;
+  totalIteracoes = totalIteracoes + 1;
   
   % Calcula o x e y da camada escondida (camada 1)
   xCamadaEscondida = calculaSaida(entradas, pesosEscondida);
@@ -73,7 +67,7 @@ while(limiteIteracoes > totalIteracoes)
   pesosEscondidaAnterior = tmp;
 end
 
-  saida = round(yCamadaSaida)
+  saida = yCamadaSaida
   desejado
 
   disp(['Iteracoes: ' num2str(totalIteracoes)])
