@@ -23,7 +23,7 @@ function finalRad = controle(serPort)
 
         SetDriveWheelsCreate(serPort,saida(1,1),saida(2,1));
         
-        pause(abs(rand(1) - 0.5));
+        pause(0.1);
     end
 
 end
