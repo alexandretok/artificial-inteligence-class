@@ -19,7 +19,7 @@ int main(){
 	time_t t;
 	srand((unsigned) time(&t));
 
-	int i, j, iteracoes;
+	int i, j, iteracoes, linhaTreinamento;
 	float erroDesejavel = 0.001, y, erro[NUM_CONJUNTOS_TREINAMENTO];
 	float entrada[NUM_CONJUNTOS_TREINAMENTO][NUM_ENTRADAS + 1] = {
 		{-1, 0.0, 0.45}, // 1
@@ -62,7 +62,7 @@ int main(){
 	float passo = 0.3;
 	double erroQuad;
 
-	printf("\nTABELA DE TREINAMENTO:\nBIAS\tX1\tX2\tD\n--------------------------\n");
+	printf("\nTabela de treinamento:\n Bias\t X1\t X2\tD\n--------------------------\n");
 	for(i=0; i < NUM_CONJUNTOS_TREINAMENTO; i++){
 		for(j=0; j < NUM_ENTRADAS + 1; j++)
 			printf("%.2f\t", entrada[i][j]);
@@ -70,7 +70,7 @@ int main(){
 		printf("\n");
 	}
 
-	printf("\nPESOS ALEATÓRIOS:\n");
+	printf("\nPesos iniciais aleatórios:\n");
 	for(j=0; j < NUM_ENTRADAS + 1; j++)
 		printf("%.2f\t", pesos[j]);
 	printf("\n\n");
@@ -79,7 +79,7 @@ int main(){
 
 	while(iteracoes < MAX_ITERACOES && erroQuad > erroDesejavel){
 		erroQuad = 0.0;
-		for(int linhaTreinamento=0; linhaTreinamento < NUM_CONJUNTOS_TREINAMENTO; linhaTreinamento++){
+		for(linhaTreinamento=0; linhaTreinamento < NUM_CONJUNTOS_TREINAMENTO; linhaTreinamento++){
 			y = 0;
 			for(j=0; j < NUM_ENTRADAS + 1; j++){
 				y += pesos[j] * entrada[linhaTreinamento][j];
@@ -98,10 +98,16 @@ int main(){
 
 		erroQuad /= NUM_CONJUNTOS_TREINAMENTO;
 
-		printf("MSE: %.2f\n", erroQuad);
+		// printf("MSE: %.2f\n", erroQuad);
 
 		iteracoes++;
 	}
+
+	printf("Pesos encontrados:\n");
+	for(j=0; j < NUM_ENTRADAS + 1; j++){
+		printf("W[%i] = %.2f\n", j, pesos[j]);
+	}
+	printf("\n");
 
 	printf("\nNúmero de iterações: %i\n", iteracoes);
 	printf("MSE Final: %.2f\n", erroQuad);
@@ -126,11 +132,9 @@ int main(){
 		for(j=0; j < NUM_ENTRADAS + 1; j++){
 			y += pesos[j] * tmp[j];
 		}
-
 		y = ativacao(y) + 1;
 
 		printf("Esse ponto representa a classe %.0f\n\n", y);
-
 	}
 
 	return 0;
