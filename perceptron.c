@@ -118,13 +118,19 @@ int main(){
 
 	while(1){
 		printf("\nDigite um valor para X1 (-1 para sair): ");
-		scanf("%f", &x1);
+		while(!scanf("%f", &x1)){
+			getchar();
+			printf("\nDigite um valor numérico para X1 (-1 para sair):");
+		}
 
 		if(x1 == -1.0)
 			break;
 
 		printf("\nDigite um valor para X2 (-1 para sair): ");
-		scanf("%f", &x2);
+		while(!scanf("%f", &x2)){
+			getchar();
+			printf("\nDigite um valor numérico para X2 (-1 para sair):");
+		}
 
 		float tmp[NUM_ENTRADAS + 1] = {-1.0, x1, x2};
 
