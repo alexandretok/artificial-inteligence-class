@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define NUM_ENTRADAS 2
-#define NUM_CONJUNTOS_TREINAMENTO 13
+#define NUM_CONJUNTOS_TREINAMENTO 16
 #define MAX_ITERACOES 5000
 
 float gerarAleatorio(){
@@ -22,7 +22,7 @@ int main(){
 	int i, j, iteracoes;
 	float erroDesejavel = 0.001, y, erro[NUM_CONJUNTOS_TREINAMENTO];
 	float entrada[NUM_CONJUNTOS_TREINAMENTO][NUM_ENTRADAS + 1] = {
-		{-1, 0.0, 0.3}, // 1
+		{-1, 0.0, 0.45}, // 1
 		{-1, 0.0, 0.6}, // 2
 		{-1, 0.1, 0.8}, // 3
 		{-1, 0.2, 0.7}, // 4
@@ -33,8 +33,11 @@ int main(){
 		{-1, 0.5, 0.6}, // 9
 		{-1, 0.5, 0.8}, // 10
 		{-1, 0.6, 1.1}, // 11
-		{-1, 0.7, 1.0}, // 12
-		{-1, 0.7, 0.4} // 13
+		{-1, 0.7, 0.4}, // 12
+		{-1, 0.7, 1.0}, // 13
+		{-1, 0.8, 1.0}, // 14
+		{-1, 0.9, 0.8}, // 15
+		{-1, 1.0, 0.9}, // 16
 	};
 	int desejado[NUM_CONJUNTOS_TREINAMENTO] = {
 		1, // 1
@@ -48,8 +51,11 @@ int main(){
 		1, // 9
 		2, // 10
 		2, // 11
-		2, // 12
-		1 // 13
+		1, // 12
+		2, // 13
+		2, // 14
+		1, // 15
+		1, // 16
 	};
 	float pesos[NUM_ENTRADAS + 1] = {gerarAleatorio(), gerarAleatorio(), gerarAleatorio()};
 
@@ -92,13 +98,13 @@ int main(){
 
 		erroQuad /= NUM_CONJUNTOS_TREINAMENTO;
 
-		printf("Erro Quad: %.2f\n", erroQuad);
+		printf("MSE: %.2f\n", erroQuad);
 
 		iteracoes++;
 	}
 
 	printf("\nNúmero de iterações: %i\n", iteracoes);
-	printf("Erro quadrático: %.2f\n", erroQuad);
+	printf("MSE Final: %.2f\n", erroQuad);
 
 	float x1, x2;
 
@@ -123,11 +129,9 @@ int main(){
 
 		y = ativacao(y) + 1;
 
-		printf("Esse ponto representa a classe %.0f", y);
+		printf("Esse ponto representa a classe %.0f\n\n", y);
 
 	}
 
 	return 0;
-
 }
-
