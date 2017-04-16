@@ -1,3 +1,12 @@
+/*
+
+É PRECISO COMPILAR COM A OPÇÃO -lm
+POR CAUSA DO USO DA BIBLIOTECA math.h
+Ex:
+gcc -lm rbf.c -o rbf && ./rbf
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -6,8 +15,11 @@
 #define NUM_ENTRADAS 2
 #define NUM_FUNCOES 3
 #define NUM_CONJUNTOS_TREINAMENTO 27
-#define MAX_ITERACOES 5000
+#define MAX_ITERACOES 1000
 
+/**
+ * Retorna um número pseudo aleatório de 0 à 0.99
+ */
 float gerarAleatorio(){
 	return ((rand() % 90) + 10) / 100.0;
 }
@@ -94,55 +106,57 @@ int main(){
 	float passo = 0.1;
 	double erroQuad;
 
-	printf("\nTabela de treinamento:\n Bias\t X1\t X2\tD\n--------------------------\n");
-	for(i=0; i < NUM_CONJUNTOS_TREINAMENTO; i++){
-		for(j=0; j < NUM_ENTRADAS + 1; j++)
-			printf("%.2f\t", entrada[i][j]);
-		printf("%i", desejado[i]);
-		printf("\n");
-	}
-
-	printf("\nCentros das funções:\n");
+		printf("\nCentros das funções:\n");
 	for(j=0; j < NUM_FUNCOES; j++){
+		printf("Função %i: ", j + 1);
 		for(i=0; i < NUM_ENTRADAS; i++)
-		printf("%.2f\t", centros[j][i]);
+			printf("%.2f\t", centros[j][i]);
 		printf("\n");
 	}
 
 	printf("\nPesos iniciais:\n");
 	for(j=0; j < NUM_FUNCOES + 1; j++)
 		printf("%.2f\t", pesos[j]);
-	printf("\n\n");
+	printf("\n");
 
 	iteracoes = 0, erroQuad = 1.0;
+
+	printf("\nTabela de treinamento:\n X1\t X2\t\t Bias\tPhi1\tPhi2\tPhi3\tD\n-----------------------------------------------------------\n");
 
 	while(iteracoes < MAX_ITERACOES && erroQuad > erroDesejavel){
 		erroQuad = 0.0;
 		for(linhaTreinamento=0; linhaTreinamento < NUM_CONJUNTOS_TREINAMENTO; linhaTreinamento++){
 			phi[linhaTreinamento][0] = entrada[linhaTreinamento][0]; // BIAS
-			// printf("phi0: %f\t", phi[linhaTreinamento][0]);
 			for(j=1; j < NUM_FUNCOES + 1; j++){
 				phi[linhaTreinamento][j] = sigmoide(entrada[linhaTreinamento], centros[j - 1]);
-				// printf("phi%i: %f\t", j, phi[linhaTreinamento][j]);
 			}
-			// printf("\n");
+
+			if(!iteracoes) for(j=1; j < NUM_ENTRADAS + 1; j++){
+				printf("%.2f\t", entrada[linhaTreinamento][j]);
+			}
+
+			if(!iteracoes) printf("\t");
+
+			if(!iteracoes) for(j=0; j < NUM_FUNCOES + 1; j++){
+				printf("%.2f\t", phi[linhaTreinamento][j]);
+			}
+
+			if(!iteracoes) printf("%i\t", desejado[linhaTreinamento]);
+
+			if(!iteracoes) printf("\n");
 
 			y = 0;
 			for(j=0; j < NUM_FUNCOES + 1; j++){
 				y += pesos[j] * phi[linhaTreinamento][j];
 			}
-			// printf("y%i: %f\t", linhaTreinamento, y);
 
 			erro[linhaTreinamento] = desejado[linhaTreinamento] - y;
-			// printf("erro: %f\n", erro[linhaTreinamento]);
 
 			erroQuad += erro[linhaTreinamento] * erro[linhaTreinamento];
 
 			for(j=0; j < NUM_FUNCOES + 1; j++){
 				pesos[j] = pesos[j] + passo * erro[linhaTreinamento] * phi[linhaTreinamento][j];
-				// printf("peso(%i): %f\t", j, pesos[j]);
 			}
-			// printf("\n\n");
 		}
 
 		erroQuad /= NUM_CONJUNTOS_TREINAMENTO;
@@ -152,7 +166,7 @@ int main(){
 		iteracoes++;
 	}
 
-	printf("Pesos encontrados:\n");
+	printf("\nPesos encontrados:\n");
 	for(j=0; j < NUM_FUNCOES + 1; j++){
 		printf("W[%i] = %.2f\n", j, pesos[j]);
 	}
@@ -163,7 +177,6 @@ int main(){
 
 	float x1, x2;
 
-	return 0;
 
 	printf("\nEscolha valores para X1 e X2 para verificar se a rede foi treinada corretamente.\n");
 
@@ -179,9 +192,14 @@ int main(){
 
 		float tmp[NUM_ENTRADAS + 1] = {-1.0, x1, x2};
 
+		phi[0][0] = tmp[0]; // BIAS
+		for(j=1; j < NUM_FUNCOES + 1; j++){
+			phi[0][j] = sigmoide(tmp, centros[j - 1]);
+		}
+
 		y = 0;
-		for(j=0; j < NUM_ENTRADAS + 1; j++){
-			y += pesos[j] * tmp[j];
+		for(j=0; j < NUM_FUNCOES + 1; j++){
+			y += pesos[j] * phi[0][j];
 		}
 
 		printf("Esse ponto representa a classe %.0f\n\n", y);
