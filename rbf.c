@@ -138,7 +138,7 @@ int main(){
 
 			erroQuad += erro[linhaTreinamento] * erro[linhaTreinamento];
 
-			for(j=0; j < NUM_ENTRADAS + 1; j++){
+			for(j=0; j < NUM_FUNCOES + 1; j++){
 				pesos[j] = pesos[j] + passo * erro[linhaTreinamento] * phi[linhaTreinamento][j];
 				// printf("peso(%i): %f\t", j, pesos[j]);
 			}
@@ -153,7 +153,7 @@ int main(){
 	}
 
 	printf("Pesos encontrados:\n");
-	for(j=0; j < NUM_ENTRADAS + 1; j++){
+	for(j=0; j < NUM_FUNCOES + 1; j++){
 		printf("W[%i] = %.2f\n", j, pesos[j]);
 	}
 	printf("\n");
